@@ -19,22 +19,22 @@ class Coin:
         self.rect = pygame.Rect((self.position), self.get_size())
 
     def get_size(self):
-        if self.type == "small":
+        if self.type == "large":
             return LARGE_SIZE
         elif self.type == "medium":
             return MEDIUM_SIZE
-        elif self.type == "large":
+        elif self.type == "small":
             return SMALL_SIZE
         else:
             return None
     
     def get_value(self):
         if self.type == "small":
-            return 2
+            return 10
         elif self.type == "medium":
             return 5
         elif self.type == "large":
-            return 8
+            return 3
         else:
             return None
     
