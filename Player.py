@@ -28,3 +28,7 @@ class Player:
 
     def hit_coin(self, coin):
         self.money += coin.get_value()
+
+    def increase_speed(self):
+        self.speed += 1
+        self.money -= 50
