@@ -11,24 +11,25 @@ WINDOW_COLOUR = (234,126,84)
 FONT_COLOUR = (255,255,255)
 FPS = 60
 MONEY_FONT = pygame.font.SysFont("comicsans", 40)
+BTN_TEXT = pygame.font.SysFont("comicsans", 30) 
 
 #Coin stuff
-MAX_COINS = 7
+MAX_COINS = 20
 coins = []
 
-ROUND_TIME = 7
 
-#user events for coin hits
-SMALL_COIN_HIT = pygame.USEREVENT + 1
-MEDIUM_COIN_HIT = pygame.USEREVENT + 2
-LARGE_COIN_HIT = pygame.USEREVENT + 3
 
 #game variables
+ROUND_TIME = 4
 startTime = time.time()
 endTime = startTime + ROUND_TIME
 inRound = False
 timeLeft = 0
 player = None
+mouse = pygame.mouse.get_pos()
+
+#gui buttons
+increaseSpeedBtn = pygame.Rect(10,50,220,35)
 
 def handle_movement(keys_pressed,player):
     player.move(keys_pressed,WIN)
@@ -38,7 +39,7 @@ def handle_movement(keys_pressed,player):
         player.hit_coin(coin_hit)
         coins.remove(coin_hit)
 
-#TODO need to ensure coin is placed within WIN
+
 def try_generate_coins():
     if len(coins) < MAX_COINS:
         for i in range(len(coins),MAX_COINS,1):
@@ -69,18 +70,34 @@ def start_round():
     startTime = time.time()
     endTime = startTime + ROUND_TIME
     inRound = True
-    timeLeft = endTime - time.time() 
+    timeLeft = endTime - time.time()
+    player.rect.x = WIDTH/2
+    player.rect.y = HEIGHT/2
+    player.draw(WIN) 
 
 def end_round():
     global inRound, timeLeft, player
     inRound = False
     timeLeft = 0
-    player.rect.x = WIDTH/2
-    player.rect.y = HEIGHT/2
-    player.draw(WIN)
+    
+
+    #buttons    
+    pygame.draw.rect(WIN, (145,67,40),increaseSpeedBtn)
+    increaseSpeedBtn_text = BTN_TEXT.render("Increase Speed (£50)" , 1, FONT_COLOUR)
+    WIN.blit(increaseSpeedBtn_text, (increaseSpeedBtn.x +5, increaseSpeedBtn.y+5) )
+    pygame.display.update()
+
+
+def handle_mouse_click(mousePos):
+    if not inRound:
+        if pygame.Rect.collidepoint(increaseSpeedBtn, mousePos):
+            if player.money >= 50:
+                player.increase_speed()
+                draw_window(player,coins,0.0)
+
 
 def run():
-    global inRound,timeLeft,player
+    global inRound,timeLeft,player, mouse
     run = True
     clock = pygame.time.Clock()
     #Create the player
@@ -97,7 +114,11 @@ def run():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
-                   
+            if event.type == pygame.MOUSEBUTTONUP:
+                mouse = pygame.mouse.get_pos()
+                handle_mouse_click(mouse)
+            
+
         if inRound:
             #handle key presses
             keys_pressed = pygame.key.get_pressed()
@@ -105,9 +126,14 @@ def run():
 
             #generate coins
             try_generate_coins()
+            #update display
+            draw_window(player,coins,timeLeft)
+        else:
+            keys_pressed = pygame.key.get_pressed()
+            if keys_pressed[pygame.K_q]:
+                start_round()
 
-        #update display
-        draw_window(player,coins,timeLeft)
+        
 
         timeLeft = endTime - time.time()
         if timeLeft <= 0:
