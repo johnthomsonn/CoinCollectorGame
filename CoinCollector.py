@@ -1,5 +1,6 @@
 import pygame
 from Player import Player
+from Coin import Coin
 #pygame.init()
 
 #Create the window and tick rate
@@ -9,19 +10,31 @@ pygame.display.set_caption("Coin Collector v0.1")
 WINDOW_COLOUR = (234,126,84)
 FPS = 60
 
+#Coin stuff
+MAX_COINS = 7
+coins = []
+
 
 def handle_movement(keys_pressed,player):
     player.move(keys_pressed,WIN)
     
+def try_generate_coins():
+    if len(coins) < MAX_COINS:
+        for i in range(len(coins),MAX_COINS,1):
+            coin = Coin(WIN)
+            if pygame.Rect.collidelist(coin.rect,coins) == -1:
+                coins.append(coin)
 
 
 
-
-def draw_window(player):
-    WIN.fill(WINDOW_COLOUR)
-    #WIN.blit(player.rect, (player.position[0],player.position[1]))
-    #pygame.draw.rect(WIN,player.colour, player)
+def draw_window(player, coins):
+    WIN.fill(WINDOW_COLOUR)    
     player.draw(WIN)
+
+    for coin in coins:
+        coin.draw(WIN)
+
+
     pygame.display.update()
 
 def run():
@@ -42,8 +55,11 @@ def run():
         keys_pressed = pygame.key.get_pressed()
         handle_movement(keys_pressed,player)
 
+        #generate coins
+        try_generate_coins()
+
         #update display
-        draw_window(player)
+        draw_window(player,coins)
 
 
 if __name__ == "__main__":
