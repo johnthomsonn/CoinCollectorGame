@@ -22,3 +22,6 @@ class Player:
             self.rect.y -= self.speed
         if keys_pressed[pygame.K_s] and self.rect.y + self.size  < window.get_size()[1] :
             self.rect.y += self.speed
+
+    def draw(self,window):
+        pygame.draw.rect(window,self.colour, self)
