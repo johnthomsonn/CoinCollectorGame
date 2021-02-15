@@ -20,7 +20,8 @@ def handle_movement(keys_pressed,player):
 def draw_window(player):
     WIN.fill(WINDOW_COLOUR)
     #WIN.blit(player.rect, (player.position[0],player.position[1]))
-    pygame.draw.rect(WIN,player.colour, player)
+    #pygame.draw.rect(WIN,player.colour, player)
+    player.draw(WIN)
     pygame.display.update()
 
 def run():
