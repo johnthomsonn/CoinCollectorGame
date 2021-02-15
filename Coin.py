@@ -15,8 +15,9 @@ class Coin:
         self.type = self.randomType
         self.value = self.get_value()
         self.size = 10
-        self.position = (random.randint(0,window.get_size()[0]), random.randint(0,window.get_size()[1]-self.size))
+        self.position = random.randint(0,window.get_size()[0] - self.size), random.randint(0,window.get_size()[1]-self.size)
         self.rect = pygame.Rect((self.position), self.get_size())
+
 
     def get_size(self):
         if self.type == "large":
