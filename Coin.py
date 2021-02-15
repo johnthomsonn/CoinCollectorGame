@@ -1,3 +1,4 @@
+import pygame
 
 YELLOW = (252,186,3)
 CYAN = (3,252,236)
@@ -30,4 +31,7 @@ class Coin:
             return YELLOW
         else:
             return None
+
+    def draw(self,window):
+        pygame.draw.rect(window,self.get_colour(), self)
             
