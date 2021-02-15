@@ -1,14 +1,16 @@
 import pygame
 from Player import Player
 from Coin import Coin
-#pygame.init()
+pygame.font.init()
 
 #Create the window and tick rate
 WIDTH, HEIGHT = 900,500
 WIN = pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption("Coin Collector v0.1")
 WINDOW_COLOUR = (234,126,84)
+FONT_COLOUR = (255,255,255)
 FPS = 60
+MONEY_FONT = pygame.font.SysFont("comicsans", 40)
 
 #Coin stuff
 MAX_COINS = 7
@@ -39,8 +41,9 @@ def try_generate_coins():
 
 def draw_window(player, coins):
     WIN.fill(WINDOW_COLOUR)    
+    money_text = MONEY_FONT.render("Money: £" + str(player.money), 1, FONT_COLOUR)
+    WIN.blit(money_text, (10,10))
     player.draw(WIN)
-
     for coin in coins:
         coin.draw(WIN)
 
