@@ -14,10 +14,20 @@ FPS = 60
 MAX_COINS = 7
 coins = []
 
+#user events for coin hits
+SMALL_COIN_HIT = pygame.USEREVENT + 1
+MEDIUM_COIN_HIT = pygame.USEREVENT + 2
+LARGE_COIN_HIT = pygame.USEREVENT + 3
 
 def handle_movement(keys_pressed,player):
     player.move(keys_pressed,WIN)
-    
+    index = pygame.Rect.collidelist(player.rect,coins)
+    if index != -1:
+        coin_hit = coins[index]
+        player.hit_coin(coin_hit)
+        coins.remove(coin_hit)
+
+#TODO need to ensure coin is placed within WIN
 def try_generate_coins():
     if len(coins) < MAX_COINS:
         for i in range(len(coins),MAX_COINS,1):
@@ -49,7 +59,7 @@ def run():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
-
+            
 
         #handle key presses
         keys_pressed = pygame.key.get_pressed()
