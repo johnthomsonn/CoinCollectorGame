@@ -25,3 +25,6 @@ class Player:
 
     def draw(self,window):
         pygame.draw.rect(window,self.colour, self)
+
+    def hit_coin(self, coin):
+        self.money += coin.get_value()
