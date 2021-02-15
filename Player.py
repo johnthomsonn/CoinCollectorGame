@@ -9,7 +9,7 @@ class Player:
         self.money = 0
         self.colour = PLAYER_COLOUR
         self.position =  position
-        self.size = 20
+        self.size = 27
         self.rect = pygame.Rect((self.position), (self.size,self.size))
         self.speed = 5
     
