@@ -6,7 +6,7 @@ PLAYER_COLOUR = (186,232,78)
 class Player:
 
     def __init__(self, position, money = 0):
-        self.money = 0
+        self.money = money
         self.colour = PLAYER_COLOUR
         self.position =  position
         self.size = 27
