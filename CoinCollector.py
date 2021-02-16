@@ -14,7 +14,7 @@ MONEY_FONT = pygame.font.SysFont("comicsans", 40)
 BTN_TEXT = pygame.font.SysFont("comicsans", 30) 
 
 #Coin stuff
-MAX_COINS = 20
+MAX_COINS = 5
 coins = []
 
 
@@ -29,7 +29,10 @@ player = None
 mouse = pygame.mouse.get_pos()
 
 #gui buttons
+BTN_COLOUR = (145,67,40)
 increaseSpeedBtn = pygame.Rect(10,50,220,35)
+increaseMaxCoinsBtn = pygame.Rect(10,90,260,35)
+startRoundBtn = pygame.Rect(WIDTH-150,10,130,35)
 
 def handle_movement(keys_pressed,player):
     player.move(keys_pressed,WIN)
@@ -75,33 +78,53 @@ def start_round():
     player.rect.y = HEIGHT/2
     player.draw(WIN) 
 
+def draw_end_of_round():
+    #draw buttons       
+    pygame.draw.rect(WIN, BTN_COLOUR,increaseSpeedBtn)
+    pygame.draw.rect(WIN, BTN_COLOUR, increaseMaxCoinsBtn)
+    pygame.draw.rect(WIN, BTN_COLOUR, startRoundBtn)
+
+    #text on buttons
+    increaseSpeedBtn_text = BTN_TEXT.render("Increase Speed (£50)" , 1, FONT_COLOUR)
+    increaseMaxCoinsBtn_text = BTN_TEXT.render("Increase Max Coins (£75)" , 1, FONT_COLOUR)
+    startRoundBtn_text = BTN_TEXT.render("Next Round" , 1, FONT_COLOUR)
+
+    WIN.blit(increaseSpeedBtn_text, (increaseSpeedBtn.x +5, increaseSpeedBtn.y+5) )
+    WIN.blit(increaseMaxCoinsBtn_text, (increaseMaxCoinsBtn.x +5, increaseMaxCoinsBtn.y+5) )
+    WIN.blit(startRoundBtn_text, (startRoundBtn.x +5, startRoundBtn.y+5) )
+    pygame.display.update()
+
 def end_round():
     global inRound, timeLeft, player
     inRound = False
     timeLeft = 0
+    draw_end_of_round()
     
 
-    #buttons    
-    pygame.draw.rect(WIN, (145,67,40),increaseSpeedBtn)
-    increaseSpeedBtn_text = BTN_TEXT.render("Increase Speed (£50)" , 1, FONT_COLOUR)
-    WIN.blit(increaseSpeedBtn_text, (increaseSpeedBtn.x +5, increaseSpeedBtn.y+5) )
-    pygame.display.update()
+    
 
 
 def handle_mouse_click(mousePos):
     if not inRound:
+        if pygame.Rect.collidepoint(startRoundBtn, mousePos):
+            start_round()
         if pygame.Rect.collidepoint(increaseSpeedBtn, mousePos):
             if player.money >= 50:
                 player.increase_speed()
                 draw_window(player,coins,0.0)
-
+        if pygame.Rect.collidepoint(increaseMaxCoinsBtn, mousePos):
+            if player.money >= 75:
+                global MAX_COINS
+                MAX_COINS += 1
+                player.money -= 75
+                draw_window(player,coins,0.0)
 
 def run():
     global inRound,timeLeft,player, mouse
     run = True
     clock = pygame.time.Clock()
     #Create the player
-    player = Player((WIDTH/2,HEIGHT/2), money=35)
+    player = Player((WIDTH/2,HEIGHT/2), money=150)
     
     
     #start the first round
@@ -136,7 +159,7 @@ def run():
         
 
         timeLeft = endTime - time.time()
-        if timeLeft <= 0:
+        if inRound and timeLeft <= 0:
             end_round()
 
 
