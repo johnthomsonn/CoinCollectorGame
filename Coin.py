@@ -8,15 +8,18 @@ SMALL_SIZE = 12,12
 MEDIUM_SIZE = 18,18
 LARGE_SIZE = 24,24
 
-SMALL_TIMER = 3
-MEDIUM_TIMER = 6
-LARGE_TIMER = 10
 
-SMALL_VALUE = 10
-MEDIUM_VALUE = 5
-LARGE_VALUE = 3
+
+
 
 class Coin:
+
+    SMALL_VALUE = 10
+    MEDIUM_VALUE = 5
+    LARGE_VALUE = 3
+    SMALL_TIMER = 3
+    MEDIUM_TIMER = 6
+    LARGE_TIMER = 10
 
     def __init__(self, window):
         self.randomType = self.get_type()
@@ -29,11 +32,11 @@ class Coin:
 
     def set_timer(self):
         if self.type == "large":
-            return LARGE_TIMER
+            return self.LARGE_TIMER
         elif self.type == "medium":
-            return MEDIUM_TIMER
+            return self.MEDIUM_TIMER
         elif self.type == "small":
-            return SMALL_TIMER
+            return self.SMALL_TIMER
         else:
             return None
 
@@ -49,11 +52,11 @@ class Coin:
     
     def get_value(self):
         if self.type == "small":
-            return SMALL_VALUE
+            return self.SMALL_VALUE
         elif self.type == "medium":
-            return MEDIUM_VALUE
+            return self.MEDIUM_VALUE
         elif self.type == "large":
-            return LARGE_VALUE
+            return self.LARGE_VALUE
         else:
             return None
     
