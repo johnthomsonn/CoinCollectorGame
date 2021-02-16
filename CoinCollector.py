@@ -119,6 +119,12 @@ def handle_mouse_click(mousePos):
                 player.money -= 75
                 draw_window(player,coins,0.0)
 
+def check_for_coin_destroy():
+    for coin in coins:
+        if time.time() >= coin.destroy:
+            coins.remove(coin)
+            try_generate_coins()
+
 def run():
     global inRound,timeLeft,player, mouse
     run = True
@@ -156,7 +162,8 @@ def run():
             if keys_pressed[pygame.K_q]:
                 start_round()
 
-        
+        #check to see if any coins have reached their destroy time
+        check_for_coin_destroy()
 
         timeLeft = endTime - time.time()
         if inRound and timeLeft <= 0:
