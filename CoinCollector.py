@@ -20,7 +20,7 @@ coins = []
 
 
 #game variables
-ROUND_TIME = 4
+ROUND_TIME = 15
 startTime = time.time()
 endTime = startTime + ROUND_TIME
 inRound = False
@@ -33,6 +33,13 @@ BTN_COLOUR = (145,67,40)
 increaseSpeedBtn = pygame.Rect(10,50,220,35)
 increaseMaxCoinsBtn = pygame.Rect(10,90,260,35)
 startRoundBtn = pygame.Rect(WIDTH-150,10,130,35)
+increaseValueSmallBtn = pygame.Rect(10,130,280,35)
+increaseValueMediumBtn = pygame.Rect(10,170,280,35)
+increaseValueLargeBtn = pygame.Rect(10,210,280,35)
+increaseTimerSmallBtn = pygame.Rect(10,250,280,35)
+increaseTimerMediumBtn = pygame.Rect(10,290,280,35)
+increaseTimerLargeBtn = pygame.Rect(10,330,280,35)
+
 
 def handle_movement(keys_pressed,player):
     player.move(keys_pressed,WIN)
@@ -83,15 +90,33 @@ def draw_end_of_round():
     pygame.draw.rect(WIN, BTN_COLOUR,increaseSpeedBtn)
     pygame.draw.rect(WIN, BTN_COLOUR, increaseMaxCoinsBtn)
     pygame.draw.rect(WIN, BTN_COLOUR, startRoundBtn)
+    pygame.draw.rect(WIN, BTN_COLOUR, increaseValueSmallBtn)
+    pygame.draw.rect(WIN, BTN_COLOUR, increaseValueMediumBtn)
+    pygame.draw.rect(WIN, BTN_COLOUR, increaseValueLargeBtn)
+    pygame.draw.rect(WIN, BTN_COLOUR, increaseTimerSmallBtn)
+    pygame.draw.rect(WIN, BTN_COLOUR, increaseTimerMediumBtn)
+    pygame.draw.rect(WIN, BTN_COLOUR, increaseTimerLargeBtn)
 
     #text on buttons
     increaseSpeedBtn_text = BTN_TEXT.render("Increase Speed (£50)" , 1, FONT_COLOUR)
     increaseMaxCoinsBtn_text = BTN_TEXT.render("Increase Max Coins (£75)" , 1, FONT_COLOUR)
     startRoundBtn_text = BTN_TEXT.render("Next Round" , 1, FONT_COLOUR)
+    increaseValueSmall_text = BTN_TEXT.render("Increase small value (£80)" , 1, FONT_COLOUR)
+    increaseValueMedium_text = BTN_TEXT.render("Increase medium value (£50)" , 1, FONT_COLOUR)
+    increaseValueLarge_text = BTN_TEXT.render("Increase large value (£35)" , 1, FONT_COLOUR)
+    increaseTimerSmall_text = BTN_TEXT.render("Increase small timer (£100)" , 1, FONT_COLOUR)
+    increaseTimerMedium_text = BTN_TEXT.render("Increase medium timer (£80)" , 1, FONT_COLOUR)
+    increaseTimerLarge_text = BTN_TEXT.render("Increase large timer (£55)" , 1, FONT_COLOUR)
 
     WIN.blit(increaseSpeedBtn_text, (increaseSpeedBtn.x +5, increaseSpeedBtn.y+5) )
     WIN.blit(increaseMaxCoinsBtn_text, (increaseMaxCoinsBtn.x +5, increaseMaxCoinsBtn.y+5) )
     WIN.blit(startRoundBtn_text, (startRoundBtn.x +5, startRoundBtn.y+5) )
+    WIN.blit(increaseValueSmall_text, (increaseValueSmallBtn.x +5, increaseValueSmallBtn.y+5) )
+    WIN.blit(increaseValueMedium_text, (increaseValueMediumBtn.x +5, increaseValueMediumBtn.y+5) )
+    WIN.blit(increaseValueLarge_text, (increaseValueLargeBtn.x +5, increaseValueLargeBtn.y+5) )
+    WIN.blit(increaseTimerSmall_text, (increaseTimerSmallBtn.x +5, increaseTimerSmallBtn.y+5) )
+    WIN.blit(increaseTimerMedium_text, (increaseTimerMediumBtn.x +5, increaseTimerMediumBtn.y+5) )
+    WIN.blit(increaseTimerLarge_text, (increaseTimerLargeBtn.x +5, increaseTimerLargeBtn.y+5) )
     pygame.display.update()
 
 def end_round():
@@ -111,13 +136,39 @@ def handle_mouse_click(mousePos):
         if pygame.Rect.collidepoint(increaseSpeedBtn, mousePos):
             if player.money >= 50:
                 player.increase_speed()
-                draw_window(player,coins,0.0)
         if pygame.Rect.collidepoint(increaseMaxCoinsBtn, mousePos):
             if player.money >= 75:
                 global MAX_COINS
                 MAX_COINS += 1
                 player.money -= 75
-                draw_window(player,coins,0.0)
+        if pygame.Rect.collidepoint(increaseValueSmallBtn, mousePos):
+            if player.money >= 80:
+                player.money -= 80
+                Coin.SMALL_VALUE += 2
+        if pygame.Rect.collidepoint(increaseValueMediumBtn, mousePos):
+            if player.money >= 50:
+                player.money -= 50
+                Coin.MEDIUM_VALUE += 2
+        if pygame.Rect.collidepoint(increaseValueLargeBtn, mousePos):
+            if player.money >= 35:
+                player.money -= 35
+                Coin.LARGE_VALUE += 2
+        if pygame.Rect.collidepoint(increaseTimerSmallBtn, mousePos):
+            if player.money >= 100:
+                player.money -= 100
+                Coin.SMALL_TIMER += 2
+        if pygame.Rect.collidepoint(increaseTimerMediumBtn, mousePos):
+            if player.money >= 80:
+                player.money -= 80
+                Coin.MEDIUM_TIMER += 2
+        if pygame.Rect.collidepoint(increaseTimerLargeBtn, mousePos):
+            if player.money >= 55:
+                player.money -= 55
+                Coin.LARGE_TIMER += 2
+                
+        draw_window(player,coins,0.0)
+        draw_end_of_round()
+        
 
 def check_for_coin_destroy():
     for coin in coins:
@@ -130,7 +181,7 @@ def run():
     run = True
     clock = pygame.time.Clock()
     #Create the player
-    player = Player((WIDTH/2,HEIGHT/2), money=150)
+    player = Player((WIDTH/2,HEIGHT/2), money=1500)
     
     
     #start the first round
@@ -157,13 +208,9 @@ def run():
             try_generate_coins()
             #update display
             draw_window(player,coins,timeLeft)
-        else:
-            keys_pressed = pygame.key.get_pressed()
-            if keys_pressed[pygame.K_q]:
-                start_round()
 
-        #check to see if any coins have reached their destroy time
-        check_for_coin_destroy()
+            #check to see if any coins have reached their destroy time
+            check_for_coin_destroy()
 
         timeLeft = endTime - time.time()
         if inRound and timeLeft <= 0:
